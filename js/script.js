@@ -88,6 +88,9 @@ class Figura {
         return this.puntos;
     }
 
+    /* 
+    cambia la posision de la figura aumentando valores en su eje
+    */
     puedeMoverDerecha(posicionX, posicionY) {
         for (const punto of this.puntos) {
             const nuevoPunto = new Punto(punto.x + 1, punto.y);
