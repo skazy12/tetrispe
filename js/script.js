@@ -367,6 +367,7 @@ const dibujar = () => {
 const obtenerNumeroAleatorioEnRango = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+// Creacion de los bloques z,T,L,l,cuadrado y todas sus variaciones
 const elegirAleatoria = () => {
     /*
     * Nombres de los tetrominós tomados de: https://www.joe.co.uk/gaming/tetris-block-names-221127
