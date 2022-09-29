@@ -534,6 +534,11 @@ const pausarOReanudar = () => {
         $btnPausar.hidden = true;
     }
 }
+/*
+Se declaran las teclas que usan para el movimiento de las figuras intentarMoverAbajo(),
+ el boton de pausa en *KEYP*
+
+*/
 document.addEventListener("keydown", (e) => {
     const {code} = e;
     if (!puedeJugar && code !== "KeyP") {
