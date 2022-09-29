@@ -186,7 +186,7 @@ y a <a href="https://freesound.org/people/grunz/sounds/109662/">Freesound.org</a
     attemptRotate() {
         this.rotateFigure();
     }
-
+    // bool para saber si el juego esta pausado
     pauseOrResumeGame() {
         if (this.paused) {
             this.resumeGame();
@@ -198,14 +198,14 @@ y a <a href="https://freesound.org/people/grunz/sounds/109662/">Freesound.org</a
             this.$btnPause.hidden = true;
         }
     }
-
+    // pausar el juego
     pauseGame() {
         this.sounds.background.pause();
         this.paused = true;
         this.canPlay = false;
         clearInterval(this.intervalId);
     }
-
+    // reanudar el juego
     resumeGame() {
         this.sounds.background.play();
         this.refreshScore();
@@ -214,7 +214,7 @@ y a <a href="https://freesound.org/people/grunz/sounds/109662/">Freesound.org</a
         this.intervalId = setInterval(this.mainLoop.bind(this), Game.PIECE_SPEED);
     }
 
-
+    //movimiento de la pieza en el tablero
     moveFigurePointsToExistingPieces() {
         this.canPlay = false;
         for (const point of this.currentFigure.getPoints()) {
@@ -228,7 +228,7 @@ y a <a href="https://freesound.org/people/grunz/sounds/109662/">Freesound.org</a
         this.restartGlobalXAndY();
         this.canPlay = true;
     }
-
+    //ver si el jugador perdio
     playerLoses() {
         // Check if there's something at Y 1. Maybe it is not fair for the player, but it works
         for (const point of this.existingPieces[1]) {
@@ -253,7 +253,7 @@ y a <a href="https://freesound.org/people/grunz/sounds/109662/">Freesound.org</a
         }
         return points;
     }
-
+    
     changeDeletedRowColor(yCoordinates) {
         for (let y of yCoordinates) {
             for (const point of this.existingPieces[y]) {
@@ -262,13 +262,13 @@ y a <a href="https://freesound.org/people/grunz/sounds/109662/">Freesound.org</a
         }
     };
 
-
+    //añadir puntos al jugador
     addScore(rows) {
         this.score += Game.PER_SQUARE_SCORE * Game.COLUMNS * rows.length;
         this.refreshScore();
     }
 
-
+    //eliminar las lineas completas
     removeRowsFromExistingPieces(yCoordinates) {
         for (let y of yCoordinates) {
             for (const point of this.existingPieces[y]) {
@@ -278,7 +278,7 @@ y a <a href="https://freesound.org/people/grunz/sounds/109662/">Freesound.org</a
         }
     }
 
-// Hace la validación de las filas que se encuentra completas y luego las elimina
+
     verifyAndDeleteFullRows() {
         // Here be dragons
         const yCoordinates = this.getPointsToDelete();
@@ -293,7 +293,7 @@ y a <a href="https://freesound.org/people/grunz/sounds/109662/">Freesound.org</a
             this.removeRowsFromExistingPieces(yCoordinates);
             this.syncExistingPiecesWithBoard();
             const invertedCoordinates = Array.from(yCoordinates);
-            // Now the coordinates are in descending order
+            // Invert the array so we can delete from the bottom
             invertedCoordinates.reverse();
 
             for (let yCoordinate of invertedCoordinates) {
@@ -364,7 +364,7 @@ y a <a href="https://freesound.org/people/grunz/sounds/109662/">Freesound.org</a
         this.syncExistingPiecesWithBoard();
     }
 
-
+    
     cleanGameBoardAndOverlapExistingPieces() {
         for (let y = 0; y < Game.ROWS; y++) {
             for (let x = 0; x < Game.COLUMNS; x++) {
@@ -392,7 +392,7 @@ y a <a href="https://freesound.org/people/grunz/sounds/109662/">Freesound.org</a
         this.cleanGameBoardAndOverlapExistingPieces();
         this.overlapCurrentFigureOnGameBoard();
     }
-
+    //plasmar en el tablero
     draw() {
         let x = 0, y = 0;
         for (const row of this.board) {
@@ -415,14 +415,14 @@ y a <a href="https://freesound.org/people/grunz/sounds/109662/">Freesound.org</a
     refreshScore() {
         this.$score.textContent = `Score: ${this.score}`;
     }
-
+    // iniciar sonidos
     initSounds() {
         this.sounds.background = Utils.loadSound("assets/New Donk City_ Daytime 8 Bit.mp3", true);
         this.sounds.success = Utils.loadSound("assets/success.wav");
         this.sounds.denied = Utils.loadSound("assets/denied.wav");
         this.sounds.tap = Utils.loadSound("assets/tap.wav");
     }
-
+    // iniciar juego
     initDomElements() {
         this.$canvas = document.querySelector("#" + this.canvasId);
         this.$score = document.querySelector("#puntaje");
@@ -436,17 +436,17 @@ y a <a href="https://freesound.org/people/grunz/sounds/109662/">Freesound.org</a
         this.$canvas.setAttribute("height", Game.CANVAS_HEIGHT + "px");
         this.canvasContext = this.$canvas.getContext("2d");
     }
-
+    // figura aleatoria
     chooseRandomFigure() {
         this.currentFigure = this.getRandomFigure();
     }
-
+    // resetear la posicion de la figura
     restartGlobalXAndY() {
         this.globalX = Math.floor(Game.COLUMNS / 2) - 1;
         this.globalY = 0;
     }
 
-
+    // obtener figura random
     getRandomFigure() {
         /*
         * Nombres de los tetrominós tomados de: https://www.joe.co.uk/gaming/tetris-block-names-221127
@@ -600,6 +600,7 @@ y a <a href="https://freesound.org/people/grunz/sounds/109662/">Freesound.org</a
      * @param point the point to check, with relative coordinates
      * @param points an array of points that conforms a figure
      */
+    // It returns true even if the point is not valid (for example if it is out of limit, because it is not the function's responsibility)
     isValidPoint(point, points) {
         const emptyPoint = this.isEmptyPoint(this.globalX + point.x, this.globalY + point.y);
         const hasSameCoordinateOfFigurePoint = points.findIndex(p => {
