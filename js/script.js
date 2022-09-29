@@ -21,7 +21,7 @@ ____________________________________
 Creado por Parzibyte (https://parzibyte.me). Este encabezado debe mantenerse intacto,
 excepto si este es un proyecto de un estudiante.
 */
-/*sdfdsfds*/
+
 let LONGITUD_CUADRADO = screen.width > 420 ? 30 : 20;
 const COLUMNAS = 10;
 const FILAS = 20;
@@ -240,7 +240,7 @@ const cambiarColorDePuntosQueSeEliminan = coordenadasY => {
         }
     });
 };
-
+//La funcion elimina las filas cuando se completan
 const verificarFilasCompletasYEliminarlas = () => {
     const puntos = obtenerPuntosQueSeEliminan();
     if (puntos.length <= 0) return;
