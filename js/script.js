@@ -70,7 +70,9 @@ class Punto {
         this.limiteY = FILAS - 1;
     }
 }
-
+/* 
+    Comienza usando DOM para llamar las funciones para darle un numero aleatorio para el color 
+    */
 class Figura {
     constructor(rotaciones) {
         this.rotaciones = rotaciones;
