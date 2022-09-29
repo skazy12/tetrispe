@@ -339,6 +339,8 @@ const moverFiguraATablero = (figura) => {
 }
 
 
+
+// relleno de color en las figuras
 llenar(juego);
 const dibujar = () => {
     let x = 0, y = 0;
