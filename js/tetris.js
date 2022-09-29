@@ -278,7 +278,7 @@ y a <a href="https://freesound.org/people/grunz/sounds/109662/">Freesound.org</a
         }
     }
 
-
+// Hace la validación de las filas que se encuentra completas y luego las elimina
     verifyAndDeleteFullRows() {
         // Here be dragons
         const yCoordinates = this.getPointsToDelete();
