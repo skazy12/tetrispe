@@ -22,7 +22,7 @@ Creado por Parzibyte (https://parzibyte.me). Este encabezado debe mantenerse int
 excepto si este es un proyecto de un estudiante.
 */
 class Game {
-    // Square length in pixels
+    // Longitud cuadrada en píxeles
     static SQUARE_LENGTH = screen.width > 420 ? 30 : 20;
     static COLUMNS = 10;
     static ROWS = 20;
@@ -31,13 +31,13 @@ class Game {
     static EMPTY_COLOR = "#eaeaea";
     static BORDER_COLOR = "#ffffff";
     static DELETED_ROW_COLOR = "#d81c38";
-    // When a piece collapses with something at its bottom, how many time wait for putting another piece? (in ms)
+    // Cuando una pieza se derrumba con algo en su parte inferior, ¿cuánto tiempo hay que esperar para poner otra pieza? (en ms)
     static TIMEOUT_LOCK_PUT_NEXT_PIECE = 300;
-    // Speed of falling piece (in ms)
+    // velocidad de la pieza (in ms)
     static PIECE_SPEED = 300;
-    // Animation time when a row is being deleted
+    // Tiempo de animación cuando se elimina una fila
     static DELETE_ROW_ANIMATION = 500;
-    // Score to add when a square dissapears (for each square)
+    // Puntuación a sumar cuando desaparece un cuadrado (por cada cuadrado)
     static PER_SQUARE_SCORE = 1;
     static COLORS = [
         "#ffd300",
@@ -58,7 +58,8 @@ class Game {
         "#a6e22e",
         "#fd971f",
     ];
-
+    //constructor donde tendremos las variables que vamos a utilizar en el juego 
+    //y las funciones que vamos a utilizar para el juego
     constructor(canvasId) {
         this.canvasId = canvasId;
         this.timeoutFlag = false;
@@ -73,7 +74,7 @@ class Game {
         this.intervalId = null;
         this.init();
     }
-
+    // Inicializar el tablero y las piezas existentes
     init() {
         this.showWelcome();
         this.initDomElements();
@@ -82,7 +83,7 @@ class Game {
         this.draw();
         this.initControls();
     }
-
+    // El resetGame es para inicializar cada variabole
     resetGame() {
         this.score = 0;
         this.sounds.success.currentTime = 0;
@@ -96,7 +97,7 @@ class Game {
         this.refreshScore();
         this.pauseGame();
     }
-
+    // muestra en una notificacion a traves de la librería sweet Alert 2 el mensaje de bienvenida
     showWelcome() {
         Swal.fire("Bienvenido", `Port casi perfecto del juego de Tetris en JavaScript.
 <br>
@@ -114,13 +115,14 @@ y a <a href="https://freesound.org/people/grunz/sounds/109662/">Freesound.org</a
 `);
     }
 
-
+    // Inicializar los elementos del DOM
     initControls() {
         document.addEventListener("keydown", (e) => {
             const { code } = e;
             if (!this.canPlay && code !== "KeyP") {
                 return;
             }
+            
             switch (code) {
                 case "ArrowRight":
                     this.attemptMoveRight();
@@ -138,9 +140,10 @@ y a <a href="https://freesound.org/people/grunz/sounds/109662/">Freesound.org</a
                     this.pauseOrResumeGame();
                     break;
             }
+            
             this.syncExistingPiecesWithBoard();
         });
-
+        // Botones de control
         this.$btnDown.addEventListener("click", () => {
             if (!this.canPlay) return;
             this.attemptMoveDown();
@@ -161,7 +164,7 @@ y a <a href="https://freesound.org/people/grunz/sounds/109662/">Freesound.org</a
             this.pauseOrResumeGame();
         }));
     }
-
+    // mover en base a las coordenadas
     attemptMoveRight() {
         if (this.figureCanMoveRight()) {
             this.globalX++;
