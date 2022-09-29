@@ -70,7 +70,9 @@ class Punto {
         this.limiteY = FILAS - 1;
     }
 }
-
+/* 
+    Comienza usando DOM para llamar las funciones para darle un numero aleatorio para el color 
+    */
 class Figura {
     constructor(rotaciones) {
         this.rotaciones = rotaciones;
@@ -537,6 +539,11 @@ const pausarOReanudar = () => {
         $btnPausar.hidden = true;
     }
 }
+/*
+Se declaran las teclas que usan para el movimiento de las figuras intentarMoverAbajo(),
+ el boton de pausa en *KEYP*
+
+*/
 document.addEventListener("keydown", (e) => {
     const {code} = e;
     if (!puedeJugar && code !== "KeyP") {

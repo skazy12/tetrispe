@@ -22,7 +22,7 @@ Creado por Parzibyte (https://parzibyte.me). Este encabezado debe mantenerse int
 excepto si este es un proyecto de un estudiante.
 */
 class Game {
-    // Square length in pixels
+    // Longitud cuadrada en píxeles
     static SQUARE_LENGTH = screen.width > 420 ? 30 : 20;
     static COLUMNS = 10;
     static ROWS = 20;
@@ -31,13 +31,13 @@ class Game {
     static EMPTY_COLOR = "#eaeaea";
     static BORDER_COLOR = "#ffffff";
     static DELETED_ROW_COLOR = "#d81c38";
-    // When a piece collapses with something at its bottom, how many time wait for putting another piece? (in ms)
+    // Cuando una pieza se derrumba con algo en su parte inferior, ¿cuánto tiempo hay que esperar para poner otra pieza? (en ms)
     static TIMEOUT_LOCK_PUT_NEXT_PIECE = 300;
-    // Speed of falling piece (in ms)
+    // velocidad de la pieza (in ms)
     static PIECE_SPEED = 300;
-    // Animation time when a row is being deleted
+    // Tiempo de animación cuando se elimina una fila
     static DELETE_ROW_ANIMATION = 500;
-    // Score to add when a square dissapears (for each square)
+    // Puntuación a sumar cuando desaparece un cuadrado (por cada cuadrado)
     static PER_SQUARE_SCORE = 1;
     static COLORS = [
         "#ffd300",
@@ -58,7 +58,8 @@ class Game {
         "#a6e22e",
         "#fd971f",
     ];
-
+    //constructor donde tendremos las variables que vamos a utilizar en el juego 
+    //y las funciones que vamos a utilizar para el juego
     constructor(canvasId) {
         this.canvasId = canvasId;
         this.timeoutFlag = false;
@@ -73,7 +74,7 @@ class Game {
         this.intervalId = null;
         this.init();
     }
-
+    // Inicializar el tablero y las piezas existentes
     init() {
         this.showWelcome();
         this.initDomElements();
@@ -82,7 +83,7 @@ class Game {
         this.draw();
         this.initControls();
     }
-
+    // El resetGame es para inicializar cada variabole
     resetGame() {
         this.score = 0;
         this.sounds.success.currentTime = 0;
@@ -96,7 +97,7 @@ class Game {
         this.refreshScore();
         this.pauseGame();
     }
-
+    // muestra en una notificacion a traves de la librería sweet Alert 2 el mensaje de bienvenida
     showWelcome() {
         Swal.fire("Bienvenido", `Port casi perfecto del juego de Tetris en JavaScript.
 <br>
@@ -114,13 +115,14 @@ y a <a href="https://freesound.org/people/grunz/sounds/109662/">Freesound.org</a
 `);
     }
 
-
+    // Inicializar los elementos del DOM
     initControls() {
         document.addEventListener("keydown", (e) => {
             const { code } = e;
             if (!this.canPlay && code !== "KeyP") {
                 return;
             }
+            
             switch (code) {
                 case "ArrowRight":
                     this.attemptMoveRight();
@@ -138,9 +140,10 @@ y a <a href="https://freesound.org/people/grunz/sounds/109662/">Freesound.org</a
                     this.pauseOrResumeGame();
                     break;
             }
+            
             this.syncExistingPiecesWithBoard();
         });
-
+        // Botones de control
         this.$btnDown.addEventListener("click", () => {
             if (!this.canPlay) return;
             this.attemptMoveDown();
@@ -161,7 +164,7 @@ y a <a href="https://freesound.org/people/grunz/sounds/109662/">Freesound.org</a
             this.pauseOrResumeGame();
         }));
     }
-
+    // mover en base a las coordenadas
     attemptMoveRight() {
         if (this.figureCanMoveRight()) {
             this.globalX++;
@@ -183,7 +186,7 @@ y a <a href="https://freesound.org/people/grunz/sounds/109662/">Freesound.org</a
     attemptRotate() {
         this.rotateFigure();
     }
-
+    // bool para saber si el juego esta pausado
     pauseOrResumeGame() {
         if (this.paused) {
             this.resumeGame();
@@ -195,14 +198,14 @@ y a <a href="https://freesound.org/people/grunz/sounds/109662/">Freesound.org</a
             this.$btnPause.hidden = true;
         }
     }
-
+    // pausar el juego
     pauseGame() {
         this.sounds.background.pause();
         this.paused = true;
         this.canPlay = false;
         clearInterval(this.intervalId);
     }
-
+    // reanudar el juego
     resumeGame() {
         this.sounds.background.play();
         this.refreshScore();
@@ -211,7 +214,7 @@ y a <a href="https://freesound.org/people/grunz/sounds/109662/">Freesound.org</a
         this.intervalId = setInterval(this.mainLoop.bind(this), Game.PIECE_SPEED);
     }
 
-
+    //movimiento de la pieza en el tablero
     moveFigurePointsToExistingPieces() {
         this.canPlay = false;
         for (const point of this.currentFigure.getPoints()) {
@@ -225,7 +228,7 @@ y a <a href="https://freesound.org/people/grunz/sounds/109662/">Freesound.org</a
         this.restartGlobalXAndY();
         this.canPlay = true;
     }
-
+    //ver si el jugador perdio
     playerLoses() {
         // Check if there's something at Y 1. Maybe it is not fair for the player, but it works
         for (const point of this.existingPieces[1]) {
@@ -250,7 +253,7 @@ y a <a href="https://freesound.org/people/grunz/sounds/109662/">Freesound.org</a
         }
         return points;
     }
-
+    
     changeDeletedRowColor(yCoordinates) {
         for (let y of yCoordinates) {
             for (const point of this.existingPieces[y]) {
@@ -259,13 +262,13 @@ y a <a href="https://freesound.org/people/grunz/sounds/109662/">Freesound.org</a
         }
     };
 
-
+    //añadir puntos al jugador
     addScore(rows) {
         this.score += Game.PER_SQUARE_SCORE * Game.COLUMNS * rows.length;
         this.refreshScore();
     }
 
-
+    //eliminar las lineas completas
     removeRowsFromExistingPieces(yCoordinates) {
         for (let y of yCoordinates) {
             for (const point of this.existingPieces[y]) {
@@ -290,7 +293,7 @@ y a <a href="https://freesound.org/people/grunz/sounds/109662/">Freesound.org</a
             this.removeRowsFromExistingPieces(yCoordinates);
             this.syncExistingPiecesWithBoard();
             const invertedCoordinates = Array.from(yCoordinates);
-            // Now the coordinates are in descending order
+            // Invert the array so we can delete from the bottom
             invertedCoordinates.reverse();
 
             for (let yCoordinate of invertedCoordinates) {
@@ -361,7 +364,7 @@ y a <a href="https://freesound.org/people/grunz/sounds/109662/">Freesound.org</a
         this.syncExistingPiecesWithBoard();
     }
 
-
+    
     cleanGameBoardAndOverlapExistingPieces() {
         for (let y = 0; y < Game.ROWS; y++) {
             for (let x = 0; x < Game.COLUMNS; x++) {
@@ -389,7 +392,7 @@ y a <a href="https://freesound.org/people/grunz/sounds/109662/">Freesound.org</a
         this.cleanGameBoardAndOverlapExistingPieces();
         this.overlapCurrentFigureOnGameBoard();
     }
-
+    //plasmar en el tablero
     draw() {
         let x = 0, y = 0;
         for (const row of this.board) {
@@ -412,14 +415,14 @@ y a <a href="https://freesound.org/people/grunz/sounds/109662/">Freesound.org</a
     refreshScore() {
         this.$score.textContent = `Score: ${this.score}`;
     }
-
+    // iniciar sonidos
     initSounds() {
         this.sounds.background = Utils.loadSound("assets/New Donk City_ Daytime 8 Bit.mp3", true);
         this.sounds.success = Utils.loadSound("assets/success.wav");
         this.sounds.denied = Utils.loadSound("assets/denied.wav");
         this.sounds.tap = Utils.loadSound("assets/tap.wav");
     }
-
+    // iniciar juego
     initDomElements() {
         this.$canvas = document.querySelector("#" + this.canvasId);
         this.$score = document.querySelector("#puntaje");
@@ -433,17 +436,17 @@ y a <a href="https://freesound.org/people/grunz/sounds/109662/">Freesound.org</a
         this.$canvas.setAttribute("height", Game.CANVAS_HEIGHT + "px");
         this.canvasContext = this.$canvas.getContext("2d");
     }
-
+    // figura aleatoria
     chooseRandomFigure() {
         this.currentFigure = this.getRandomFigure();
     }
-
+    // resetear la posicion de la figura
     restartGlobalXAndY() {
         this.globalX = Math.floor(Game.COLUMNS / 2) - 1;
         this.globalY = 0;
     }
 
-
+    // obtener figura random
     getRandomFigure() {
         /*
         * Nombres de los tetrominós tomados de: https://www.joe.co.uk/gaming/tetris-block-names-221127
@@ -597,6 +600,7 @@ y a <a href="https://freesound.org/people/grunz/sounds/109662/">Freesound.org</a
      * @param point the point to check, with relative coordinates
      * @param points an array of points that conforms a figure
      */
+    // It returns true even if the point is not valid (for example if it is out of limit, because it is not the function's responsibility)
     isValidPoint(point, points) {
         const emptyPoint = this.isEmptyPoint(this.globalX + point.x, this.globalY + point.y);
         const hasSameCoordinateOfFigurePoint = points.findIndex(p => {
